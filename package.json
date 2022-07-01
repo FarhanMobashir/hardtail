@@ -1,6 +1,6 @@
 {
   "name": "hardtail",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "an easy way to handle api calls in react application",
   "scripts": {
     "build": "rollup -c",
