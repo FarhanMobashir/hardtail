@@ -1,3 +1,3 @@
 export { useThunkReducer } from "./useThunkReducer";
-export { buildHooks } from "./buildApiHooks";
+export { buildHooks, fetchBaseQuery } from "./buildApiHooks";
 export { ApiProvider, useApi } from "./ApiContext.jsx";
