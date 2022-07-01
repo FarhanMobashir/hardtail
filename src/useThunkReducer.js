@@ -1,9 +1,9 @@
 import React from "react";
-export const useThunkReducer = (reducer, initialState) => {
+export const useThunkReducer = (reducer, initialState, log) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const enhancedDispatch = React.useCallback(
     (action) => {
-      if (process.env.NODE_ENV === "development") {
+      if (log === "log") {
         console.log("action type", action.type, "payload", action.payload);
       }
       if (typeof action === "function") {

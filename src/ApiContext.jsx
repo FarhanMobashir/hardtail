@@ -8,6 +8,7 @@ export const ApiProvider = ({
   apiArray = [],
   baseQuery,
   apiActionTypes = {},
+  logging,
 }) => {
   const getInitialState = (apiActionTypes) => {
     let data = {};
@@ -28,7 +29,7 @@ export const ApiProvider = ({
     return state;
   };
 
-  const [state, dispatch] = useThunkReducer(reducer, initialState);
+  const [state, dispatch] = useThunkReducer(reducer, initialState, logging);
 
   const api = buildHooks(dispatch)({
     queryArray: apiArray,

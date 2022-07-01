@@ -70,6 +70,10 @@ export const buildHooks =
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(false);
         const [data, setData] = React.useState(null);
+        const reload = () => {
+          setLoading(true);
+          setError(false);
+        };
         React.useEffect(() => {
           setLoading(true);
 
@@ -94,11 +98,9 @@ export const buildHooks =
               setLoading(false);
               setError(err);
             });
-
-          return () => {};
         }, [dispatchFn, urlParams]);
 
-        return { loading, data, error };
+        return { loading, data, error, reload };
       };
 
       /**
