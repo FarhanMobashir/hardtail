@@ -1,7 +1,7 @@
 {
-  "name": "rollup-test",
+  "name": "hardtail",
   "version": "1.0.0",
-  "description": "testing repo for rollup",
+  "description": "an easy way to handle api calls in react application",
   "scripts": {
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
