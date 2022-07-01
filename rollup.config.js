@@ -16,7 +16,7 @@ export default {
       file: packageJson.main,
       format: "cjs",
       sourcemap: true,
-      name: "react-lib",
+      name: "hardtail",
     },
     {
       file: packageJson.module,
