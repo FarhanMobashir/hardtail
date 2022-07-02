@@ -14,11 +14,11 @@ import React from "react";
  * delete: (url: string) => Promise<any>
  * }>
  */
-export const fetchBaseQuery = ({ baseUrl, headers }) => {
+export const fetchBaseQuery = ({ baseUrl, fetchOptions }) => {
   return async (query, options) => {
     return await fetch(`${baseUrl}${query}`, {
+      ...fetchOptions,
       ...options,
-      headers: headers,
     });
   };
 };
@@ -66,7 +66,7 @@ export const buildHooks =
        * @param {{urlParams:string,fetchOptions:}} param0
        * @returns {{loading: boolean, data: any, error: any}}
        */
-      const useQuery = ({ urlParams = "", fetchOptions }) => {
+      const useQuery = (urlParams = "", fetchOptions) => {
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(false);
         const [data, setData] = React.useState(null);
@@ -134,11 +134,12 @@ export const buildHooks =
          *
          */
         let mutationCallBack = React.useCallback(
-          ({ body = {}, urlParams = "" }) => {
+          ({ body = {}, urlParams = "", fetchOptions = {} }) => {
             setLoading(true);
             baseQuery(`${item.query}/${urlParams}`, {
               method: item.method,
               body: JSON.stringify(body),
+              ...fetchOptions,
             })
               .then((res) => {
                 if (item.log) {
