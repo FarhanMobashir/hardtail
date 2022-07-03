@@ -102,7 +102,7 @@ export const buildHooks =
               setLoading(false);
               setError(err);
             });
-        }, [dispatchFn, urlParams]);
+        }, [dispatchFn, urlParams, loading]);
 
         return { loading, data, error, reload };
       };
