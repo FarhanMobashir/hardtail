@@ -73,6 +73,7 @@ export const buildHooks =
       const useQuery = (urlParams = "", fetchOptions) => {
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(false);
+        const [errorValue, setErrorValue] = React.useState(null);
         const [data, setData] = React.useState(null);
         const reload = () => {
           setLoading(true);
@@ -86,6 +87,12 @@ export const buildHooks =
               if (item.log) {
                 console.log("logging response", res);
               }
+              if (res.status >= 400 && res.status <= 599) {
+                setError(true);
+                setLoading(false);
+                setErrorValue(res);
+              }
+
               return res.json();
             })
             .then((data) => {
@@ -102,7 +109,7 @@ export const buildHooks =
             });
         }, [dispatchFn, urlParams, loading]);
 
-        return { loading, data, error, reload };
+        return { loading, data, error, errorValue, reload };
       };
 
       /**
@@ -126,6 +133,7 @@ export const buildHooks =
       function useMutation() {
         const [loading, setLoading] = React.useState(null);
         const [error, setError] = React.useState(false);
+        const [errorValue, setErrorValue] = React.useState(null);
         const [data, setData] = React.useState(null);
         /**
          * @param {{
@@ -146,6 +154,11 @@ export const buildHooks =
               .then((res) => {
                 if (item.log) {
                   console.log("logging response", res);
+                }
+                if (res.status >= 400 && res.status <= 599) {
+                  setError(true);
+                  setLoading(false);
+                  setErrorValue(res);
                 }
                 return res.json();
               })
@@ -176,6 +189,7 @@ export const buildHooks =
           {
             loading,
             error,
+            errorValue,
             data,
           },
         ];
