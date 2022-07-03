@@ -79,8 +79,6 @@ export const buildHooks =
           setError(false);
         };
         React.useEffect(() => {
-          setLoading(true);
-
           baseQuery(`${item.query}/${urlParams}`, {
             ...fetchOptions,
           })
