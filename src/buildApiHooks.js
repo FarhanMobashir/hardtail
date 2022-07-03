@@ -5,7 +5,7 @@ import React from "react";
  *
  * @param {{
  * baseUrl: string,
- * headers: RequestInit["headers"]
+ * fetchOptions: RequestInit
  * }} param0
  * @returns Promise<{
  * get: (url: string, params?: any) => Promise<any>,
@@ -24,7 +24,11 @@ export const fetchBaseQuery = ({ baseUrl, fetchOptions }) => {
 };
 
 const enhancedispatch = (dispatch, data, item) => {
-  dispatch({ type: item.name, payload: data });
+  if (item.tag) {
+    dispatch({ type: item.tag, payload: data });
+  } else {
+    dispatch({ type: item.name, payload: data });
+  }
 };
 
 /**

@@ -10,15 +10,21 @@ export const ApiProvider = ({
   apiActionTypes = {},
   logging,
 }) => {
-  const getInitialState = (apiActionTypes) => {
+  const getInitialState = (apiArray) => {
     let data = {};
-    for (let key in apiActionTypes) {
-      data[key] = null;
-    }
+    apiArray.forEach((item) => {
+      const tag = item.tag;
+      const name = item.name;
+      if (tag) {
+        data[tag] = null;
+      } else {
+        data[name] = null;
+      }
+    });
     return data;
   };
 
-  const initialState = getInitialState(apiActionTypes);
+  const initialState = getInitialState(apiArray);
 
   const reducer = (state = initialState, action) => {
     for (let key in initialState) {
