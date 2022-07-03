@@ -7,7 +7,6 @@ export const ApiProvider = ({
   children,
   apiArray = [],
   baseQuery,
-  apiActionTypes = {},
   logging,
 }) => {
   const getInitialState = (apiArray) => {
