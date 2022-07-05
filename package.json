@@ -2,9 +2,13 @@
   "name": "hardtail",
   "version": "1.0.13",
   "description": "an easy way to handle api calls in react application",
+  "jest": {
+    "verbose": true
+  },
   "scripts": {
     "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "jest:watch": "jest --watch"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -12,10 +16,13 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
     "@babel/preset-react": "^7.18.6",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@testing-library/react": "^13.3.0",
+    "jest": "^28.1.2",
     "react": "^18.2.0",
     "rollup": "^2.75.7",
     "rollup-plugin-peer-deps-external": "^2.2.4",

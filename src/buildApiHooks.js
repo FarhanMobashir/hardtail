@@ -70,34 +70,35 @@ export const buildHooks =
        * @param {{urlParams:string,fetchOptions:}} param0
        * @returns {{loading: boolean, data: any, error: any}}
        */
-      const useQuery = (urlParams = "", fetchOptions) => {
+      const useQuery = useCallback((urlParams = "", fetchOptions = {}) => {
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(false);
         const [errorValue, setErrorValue] = React.useState(null);
         const [data, setData] = React.useState(null);
-        const reload = () => {
-          setLoading(true);
-          setError(false);
-        };
+
         React.useEffect(() => {
-          baseQuery(`${item.query}/${urlParams}`, {
-            ...fetchOptions,
-          })
+          console.log("In useEffect", { loading, error, data });
+          let fetchCall = baseQuery(
+            `${item.query}/${urlParams ? urlParams : ""}`,
+            {
+              ...fetchOptions,
+            }
+          );
+          setLoading(() => true);
+          fetchCall
             .then((res) => {
               if (item.log) {
                 console.log("logging response", res);
               }
               if (res.status >= 400 && res.status <= 599) {
                 setError(true);
-                setLoading(false);
-                setErrorValue(res);
               }
-
               return res.json();
             })
             .then((data) => {
               setData(data);
-              setLoading(false);
+              setLoading(() => false);
+              // ? dispatching actions
               enhancedispatch(dispatchFn, data, item);
             })
             .catch((err) => {
@@ -105,12 +106,13 @@ export const buildHooks =
                 console.error("logging error", err);
               }
               setLoading(false);
+              setErrorValue(res);
               setError(err);
             });
-        }, [dispatchFn, urlParams, loading]);
+        }, [urlParams, error]);
 
-        return { loading, data, error, errorValue, reload };
-      };
+        return { loading, data, error, errorValue };
+      }, []);
 
       /**
        *
@@ -165,13 +167,7 @@ export const buildHooks =
               .then((data) => {
                 setData(data);
                 setLoading(false);
-                enhancedispatch(
-                  dispatchFn,
-                  {
-                    data: data,
-                  },
-                  item
-                );
+                enhancedispatch(dispatchFn, data, item);
               })
               .catch((err) => {
                 if (item.log) {
