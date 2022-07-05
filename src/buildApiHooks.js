@@ -74,45 +74,43 @@ export const buildHooks =
         (urlParams = "", fetchOptions = {}) => {
           const [loading, setLoading] = React.useState(true);
           const [error, setError] = React.useState(false);
-          const [errorValue, setErrorValue] = React.useState(null);
+          const [errorValue, setErrorValue] = React.useState();
           const [data, setData] = React.useState(null);
 
-          React.useEffect(() => {
-            console.log("In useEffect", { loading, error, data });
-            let fetchCall = baseQuery(
-              `${item.query}/${urlParams ? urlParams : ""}`,
-              {
-                ...fetchOptions,
-              }
-            );
-            setLoading(() => true);
-            fetchCall
-              .then((res) => {
-                if (item.log) {
-                  console.log("logging response", res);
-                }
-                if (res.status >= 400 && res.status <= 599) {
-                  setError(true);
-                }
-                return res.json();
-              })
-              .then((data) => {
-                setData(data);
-                setLoading(() => false);
-                // ? dispatching actions
-                enhancedispatch(dispatchFn, data, item);
-              })
-              .catch((err) => {
-                if (item.log) {
-                  console.error("logging error", err);
-                }
-                setLoading(false);
-                setErrorValue(res);
-                setError(err);
-              });
-          }, [urlParams, error]);
+          const reload = React.useCallback(() => {
+            apiCall(item, urlParams, fetchOptions, dispatchFn);
+          }, [urlParams]);
 
-          return { loading, data, error, errorValue };
+          const apiCall = async (item, urlParams, fetchOptions, dispatchFn) => {
+            try {
+              setLoading(true);
+              const response = await baseQuery(
+                `${item.query}/${urlParams ? urlParams : ""}`,
+                {
+                  ...fetchOptions,
+                }
+              );
+              if (response.status >= 400 && response.status <= 599) {
+                setError(true);
+                setErrorValue(res);
+              }
+              if (response.status >= 200 && response.status <= 299) {
+                const apiData = await response.json();
+                setData(apiData);
+                enhancedispatch(dispatchFn, apiData, item);
+                setError(false);
+              }
+            } catch (err) {
+              setError(true);
+            } finally {
+              setLoading(false);
+            }
+          };
+
+          React.useEffect(() => {
+            apiCall(item, urlParams, fetchOptions, dispatchFn);
+          }, [urlParams, reload]);
+          return { loading, data, error, errorValue, reload };
         },
         []
       );
