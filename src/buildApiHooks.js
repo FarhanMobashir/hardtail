@@ -70,49 +70,52 @@ export const buildHooks =
        * @param {{urlParams:string,fetchOptions:}} param0
        * @returns {{loading: boolean, data: any, error: any}}
        */
-      const useQuery = useCallback((urlParams = "", fetchOptions = {}) => {
-        const [loading, setLoading] = React.useState(true);
-        const [error, setError] = React.useState(false);
-        const [errorValue, setErrorValue] = React.useState(null);
-        const [data, setData] = React.useState(null);
+      const useQuery = React.useCallback(
+        (urlParams = "", fetchOptions = {}) => {
+          const [loading, setLoading] = React.useState(true);
+          const [error, setError] = React.useState(false);
+          const [errorValue, setErrorValue] = React.useState(null);
+          const [data, setData] = React.useState(null);
 
-        React.useEffect(() => {
-          console.log("In useEffect", { loading, error, data });
-          let fetchCall = baseQuery(
-            `${item.query}/${urlParams ? urlParams : ""}`,
-            {
-              ...fetchOptions,
-            }
-          );
-          setLoading(() => true);
-          fetchCall
-            .then((res) => {
-              if (item.log) {
-                console.log("logging response", res);
+          React.useEffect(() => {
+            console.log("In useEffect", { loading, error, data });
+            let fetchCall = baseQuery(
+              `${item.query}/${urlParams ? urlParams : ""}`,
+              {
+                ...fetchOptions,
               }
-              if (res.status >= 400 && res.status <= 599) {
-                setError(true);
-              }
-              return res.json();
-            })
-            .then((data) => {
-              setData(data);
-              setLoading(() => false);
-              // ? dispatching actions
-              enhancedispatch(dispatchFn, data, item);
-            })
-            .catch((err) => {
-              if (item.log) {
-                console.error("logging error", err);
-              }
-              setLoading(false);
-              setErrorValue(res);
-              setError(err);
-            });
-        }, [urlParams, error]);
+            );
+            setLoading(() => true);
+            fetchCall
+              .then((res) => {
+                if (item.log) {
+                  console.log("logging response", res);
+                }
+                if (res.status >= 400 && res.status <= 599) {
+                  setError(true);
+                }
+                return res.json();
+              })
+              .then((data) => {
+                setData(data);
+                setLoading(() => false);
+                // ? dispatching actions
+                enhancedispatch(dispatchFn, data, item);
+              })
+              .catch((err) => {
+                if (item.log) {
+                  console.error("logging error", err);
+                }
+                setLoading(false);
+                setErrorValue(res);
+                setError(err);
+              });
+          }, [urlParams, error]);
 
-        return { loading, data, error, errorValue };
-      }, []);
+          return { loading, data, error, errorValue };
+        },
+        []
+      );
 
       /**
        *
