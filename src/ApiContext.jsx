@@ -35,6 +35,7 @@ export const ApiProvider = ({
   };
 
   const [state, dispatch] = useThunkReducer(reducer, initialState, logging);
+  // for headers
 
   const api = buildHooks(dispatch)({
     queryArray: apiArray,
